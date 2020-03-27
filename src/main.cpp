@@ -2,5 +2,6 @@
 
 int main()
 {
-    std::cout << "Hello world!\n";
+    Conway::Engine Engine(640, 480);
+    Engine.run();
 }

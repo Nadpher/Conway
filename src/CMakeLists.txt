@@ -6,4 +6,4 @@ else()
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-add_executable(intro main.cpp)
+add_executable(Conway main.cpp)
