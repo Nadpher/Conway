@@ -1,5 +1,6 @@
 #include <vector>
 #include <SDL2/SDL.h>
+#include <utility>
 
 // Grid must always have same size,
 // so i define them with preprocessor
@@ -39,6 +40,7 @@ namespace Conway
             std::vector<Cell> m_Grid;
             const int m_ScreenWidth;
             const int m_ScreenHeight;
+            const std::pair<int, int> m_CellSize;
             bool m_Running = true;
 
             SDL_Window* m_Window;

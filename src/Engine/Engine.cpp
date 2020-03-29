@@ -1,7 +1,8 @@
 #include "Engine.h"
 
 Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
-    : m_ScreenWidth{ScreenWidth}, m_ScreenHeight{ScreenHeight}
+    : m_ScreenWidth{ScreenWidth}, m_ScreenHeight{ScreenHeight},
+      m_CellSize{ScreenWidth / GRID_WIDTH, ScreenHeight / GRID_HEIGHT} 
 {
     SDL_assert(SDL_Init(SDL_INIT_VIDEO) >= 0);
 
@@ -18,6 +19,7 @@ Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
 
     m_Renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED);
     SDL_assert(m_Renderer != NULL);
+
 }
 
 Conway::Engine::~Engine()
