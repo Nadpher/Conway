@@ -34,17 +34,11 @@ namespace Conway
 
             void DrawLines();
 
-            enum class CellState
+            enum class Cell
             {
                 Dead,
                 Alive
             };
-            struct Cell
-            {
-                CellState state;
-                int XPosition;
-                int YPosition;
-            }; 
 
             std::vector<Cell> m_Grid;
             const int m_ScreenWidth;

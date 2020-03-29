@@ -20,7 +20,13 @@ Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
     m_Renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED);
     SDL_assert(m_Renderer != NULL);
 
-    // TODO: GRID INIT
+    // In its own scope for minimum memory usage
+    // Initializes the member grid
+    {
+        int gridsize = GRID_WIDTH * GRID_HEIGHT;
+        std::vector<Cell> grid(gridsize, Cell::Dead);
+        m_Grid = grid;
+    }
 
     // Show lines
     SDL_RenderClear(m_Renderer);
@@ -50,9 +56,12 @@ void Conway::Engine::HandleEvents()
                 m_Running = false;
                 break;
 
+                // Toggles the updating with a keypress
             case SDL_KEYDOWN:
-                m_Update = true;
+                m_Update = m_Update ? false : true;
                 break;
+
+                // TODO: Mouse input.
         }
     }
 }
