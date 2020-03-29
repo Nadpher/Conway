@@ -20,6 +20,13 @@ Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
     m_Renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED);
     SDL_assert(m_Renderer != NULL);
 
+    // TODO: GRID INIT
+
+    // Show lines
+    SDL_RenderClear(m_Renderer);
+    DrawLines();
+    SDL_RenderPresent(m_Renderer);
+
 }
 
 Conway::Engine::~Engine()
@@ -42,27 +49,76 @@ void Conway::Engine::HandleEvents()
             case SDL_QUIT:
                 m_Running = false;
                 break;
+
+            case SDL_KEYDOWN:
+                m_Update = true;
+                break;
         }
     }
 }
 
+// Draws the grid
 void Conway::Engine::Draw()
 {
     SDL_RenderClear(m_Renderer);
 
+    DrawLines();
     SDL_RenderPresent(m_Renderer);
 }
 
+// This function draws
+// the lines delimiting each cell.
+// The first loop draws the horizontal
+// lines, the second one the vertical lines.
+void Conway::Engine::DrawLines()
+{
+    SDL_SetRenderDrawColor(m_Renderer, 255, 255, 255, 255);
+    for (int i = 0; i < GRID_HEIGHT; ++i)
+    {
+        if (i != 0)
+        {
+            SDL_RenderDrawLine(
+                    m_Renderer,
+                    0,
+                    m_CellSize.second * i,
+                    m_CellSize.first * GRID_WIDTH,
+                    m_CellSize.second * i
+                    );
+        }
+    }
+
+    for (int i = 0; i < GRID_WIDTH; ++i)
+    {
+        if (i != 0)
+        {
+            SDL_RenderDrawLine(
+                    m_Renderer,
+                    m_CellSize.first * i,
+                    0,
+                    m_CellSize.first * i,
+                    m_CellSize.second * GRID_HEIGHT
+                    );
+        }
+    }
+
+    SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 255);
+} 
+
+// Main game loop
 void Conway::Engine::Run()
 {
     while (m_Running)
     {
         HandleEvents();
-        Update();
-        Draw();
+        if (m_Update)
+        {
+            Update();
+            Draw();
+        }
     }
 }
 
+// Game logic
 void Conway::Engine::Update()
 {
     

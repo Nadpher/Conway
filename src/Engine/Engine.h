@@ -32,15 +32,26 @@ namespace Conway
             void Draw();
             void Update();
 
-            enum class Cell
+            void DrawLines();
+
+            enum class CellState
             {
                 Dead,
                 Alive
             };
+            struct Cell
+            {
+                CellState state;
+                int XPosition;
+                int YPosition;
+            }; 
+
             std::vector<Cell> m_Grid;
             const int m_ScreenWidth;
             const int m_ScreenHeight;
             const std::pair<int, int> m_CellSize;
+
+            bool m_Update = false;
             bool m_Running = true;
 
             SDL_Window* m_Window;

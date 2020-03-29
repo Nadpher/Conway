@@ -2,7 +2,7 @@
 
 int main()
 {
-    Conway::Engine Engine(640, 480);
+    Conway::Engine Engine(1280, 1024);
     Engine.Run();
 
     return 0;
