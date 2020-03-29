@@ -23,11 +23,11 @@ namespace Conway
             Engine(int ScreenWidth, int ScreenHeight);
             ~Engine(); 
 
-            void run();
+            void Run();
 
         private:
 
-            void HandleInput();
+            void HandleEvents();
             void Draw();
             void Update();
 
@@ -39,6 +39,7 @@ namespace Conway
             std::vector<Cell> m_Grid;
             const int m_ScreenWidth;
             const int m_ScreenHeight;
+            bool m_Running = true;
 
             SDL_Window* m_Window;
             SDL_Renderer* m_Renderer;
