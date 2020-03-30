@@ -45,6 +45,32 @@ Conway::Engine::~Engine()
     SDL_Quit();
 }
 
+int Conway::Engine::CountAliveNeighbors(std::pair<int, int> GridCell)
+{
+    int count = 0;
+    for (int i = -1; i < 2; ++i)
+    {
+        for (int j = -1; j <2; ++j)
+        {
+            int absoluteX = GridCell.first + j;
+            int absoluteY = GridCell.second + i;
+            if (absoluteX == -1 || absoluteX == GRID_WIDTH ||
+                absoluteY == -1 || absoluteY == GRID_HEIGHT ||
+                (absoluteX == GridCell.first && absoluteY == GridCell.second))
+            {
+                continue;
+            }
+
+            if (m_Grid[absoluteX + GRID_WIDTH * absoluteY] == Cell::Alive)
+            {
+                ++count;
+            }
+        }
+    }
+    
+    return count;
+}
+
 // Excactly what it does. Changes the cell that was clicked on
 // based on the State parameter.
 void Conway::Engine::ChangeClickedCell(std::pair<int, int> Coords, Cell State)
@@ -195,5 +221,28 @@ void Conway::Engine::Run()
 // Game logic
 void Conway::Engine::Update()
 {
-    std::vector<Cell> temp = { };    
+    std::vector<Cell> temp = m_Grid;    
+
+    for (int i = 0; i < GRID_HEIGHT; ++i)
+    {
+        for (int j = 0; j < GRID_WIDTH; ++j)
+        {
+            if (m_Grid[j + GRID_HEIGHT * i] == Cell::Alive)
+            {
+                if (CountAliveNeighbors({j, i}) < 2 || CountAliveNeighbors({j, i}) > 3)
+                {
+                    temp[j + GRID_HEIGHT * i] = Cell::Dead;
+                }
+            }
+            else
+            {
+                if (CountAliveNeighbors({j, i}) == 3)
+                {
+                    temp[j + GRID_HEIGHT * i] = Cell::Alive;
+                }
+            }
+        }
+    }
+
+    m_Grid = temp;
 }

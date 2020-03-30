@@ -30,7 +30,7 @@ namespace Conway
             void Update();
 
             void DrawLines();
-            void DrawCells();
+            int CountAliveNeighbors(std::pair<int, int> GridCell);
 
             enum class Cell
             {
