@@ -2,12 +2,6 @@
 #include <SDL2/SDL.h>
 #include <utility>
 
-// Grid must always have same size,
-// so i define them with preprocessor
-// because there is no need for a varible.
-#define GRID_WIDTH 80
-#define GRID_HEIGHT 60
-
 // Namespace Conway to
 // always enclose classes in a namespace.
 namespace Conway
@@ -25,6 +19,9 @@ namespace Conway
             ~Engine(); 
 
             void Run();
+
+            static constexpr int GRID_WIDTH = 80;
+            static constexpr int GRID_HEIGHT = 60;
 
         private:
 
@@ -53,5 +50,6 @@ namespace Conway
 
             SDL_Window* m_Window;
             SDL_Renderer* m_Renderer;
+
     };
 }
