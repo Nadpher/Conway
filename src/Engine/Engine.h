@@ -33,12 +33,15 @@ namespace Conway
             void Update();
 
             void DrawLines();
+            void DrawCells();
 
             enum class Cell
             {
                 Dead,
                 Alive
             };
+            
+            void ChangeClickedCell(std::pair<int, int> Coords, Cell State);
 
             std::vector<Cell> m_Grid;
             const int m_ScreenWidth;

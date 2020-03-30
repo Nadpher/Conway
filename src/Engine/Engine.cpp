@@ -1,5 +1,7 @@
 #include "Engine.h"
 
+#include <cmath>
+
 Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
     : m_ScreenWidth{ScreenWidth}, m_ScreenHeight{ScreenHeight},
       m_CellSize{ScreenWidth / GRID_WIDTH, ScreenHeight / GRID_HEIGHT} 
@@ -31,8 +33,6 @@ Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
     // Show lines
     SDL_RenderClear(m_Renderer);
     DrawLines();
-    SDL_RenderPresent(m_Renderer);
-
 }
 
 Conway::Engine::~Engine()
@@ -43,6 +43,42 @@ Conway::Engine::~Engine()
     m_Renderer = NULL;
 
     SDL_Quit();
+}
+
+// Excactly what it does. Changes the cell that was clicked on
+// based on the State parameter.
+void Conway::Engine::ChangeClickedCell(std::pair<int, int> Coords, Cell State)
+{
+    SDL_Rect rect;
+    
+    rect.x = floor(Coords.first/m_CellSize.first)*m_CellSize.first;
+    rect.y = floor(Coords.second/m_CellSize.second)*m_CellSize.second;
+    rect.w = m_CellSize.first;
+    rect.h = m_CellSize.second;
+
+    int ClickedCell = Coords.first / m_CellSize.first +
+        GRID_WIDTH * Coords.second / m_CellSize.second;
+
+    m_Grid[ClickedCell] = State;
+
+    if (State == Cell::Alive)
+    {
+        SDL_SetRenderDrawColor(m_Renderer, 255, 255, 255, 255);
+        SDL_RenderFillRect(m_Renderer, &rect);
+        SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 255);
+    }
+    else
+    {
+        SDL_RenderFillRect(m_Renderer, &rect);
+    }
+
+    SDL_RenderPresent(m_Renderer);
+    DrawLines();
+}
+
+void Conway::Engine::DrawCells()
+{
+
 }
 
 void Conway::Engine::HandleEvents()
@@ -61,7 +97,15 @@ void Conway::Engine::HandleEvents()
                 m_Update = m_Update ? false : true;
                 break;
 
-                // TODO: Mouse input.
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button == SDL_BUTTON_LEFT)
+                {
+                    ChangeClickedCell({event.button.x, event.button.y}, Cell::Alive);
+                }
+                else if (event.button.button == SDL_BUTTON_RIGHT)
+                {
+                    ChangeClickedCell({event.button.x, event.button.y}, Cell::Dead);
+                }
         }
     }
 }
@@ -110,6 +154,7 @@ void Conway::Engine::DrawLines()
         }
     }
 
+    SDL_RenderPresent(m_Renderer);
     SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 255);
 } 
 
