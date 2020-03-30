@@ -19,7 +19,7 @@ Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
 
     SDL_assert(m_Window != NULL);
 
-    m_Renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED);
+    m_Renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
     SDL_assert(m_Renderer != NULL);
 
     // In its own scope for minimum memory usage
@@ -52,11 +52,11 @@ int Conway::Engine::CountAliveNeighbors(std::pair<int, int> GridCell)
     {
         for (int j = -1; j <2; ++j)
         {
-            int absoluteX = GridCell.first + j;
-            int absoluteY = GridCell.second + i;
+            int absoluteX = GridCell.first + i;
+            int absoluteY = GridCell.second + j;
             if (absoluteX == -1 || absoluteX == GRID_WIDTH ||
                 absoluteY == -1 || absoluteY == GRID_HEIGHT ||
-                (absoluteX == GridCell.first && absoluteY == GridCell.second))
+               (i == 0 && j == 0))
             {
                 continue;
             }
@@ -113,8 +113,11 @@ void Conway::Engine::HandleEvents()
 
                 // Toggles the updating with a keypress
             case SDL_KEYDOWN:
-                m_Update = m_Update ? false : true;
-                DrawLines();
+                if (event.key.keysym.sym == SDLK_SPACE)
+                {
+                    m_Update = m_Update ? false : true;
+                    DrawLines();
+                }
                 break;
 
             case SDL_MOUSEBUTTONDOWN:
@@ -215,30 +218,32 @@ void Conway::Engine::Run()
             Update();
             Draw();
         }
+
+        SDL_Delay(100);
     }
 }
 
 // Game logic
 void Conway::Engine::Update()
 {
-    std::vector<Cell> temp = m_Grid;    
+    std::vector<Cell> temp(m_Grid);
 
     for (int i = 0; i < GRID_HEIGHT; ++i)
     {
         for (int j = 0; j < GRID_WIDTH; ++j)
         {
-            if (m_Grid[j + GRID_HEIGHT * i] == Cell::Alive)
+            if (m_Grid[j + GRID_WIDTH * i] == Cell::Alive)
             {
                 if (CountAliveNeighbors({j, i}) < 2 || CountAliveNeighbors({j, i}) > 3)
                 {
-                    temp[j + GRID_HEIGHT * i] = Cell::Dead;
+                    temp[j + GRID_WIDTH * i] = Cell::Dead;
                 }
             }
             else
             {
                 if (CountAliveNeighbors({j, i}) == 3)
                 {
-                    temp[j + GRID_HEIGHT * i] = Cell::Alive;
+                    temp[j + GRID_WIDTH * i] = Cell::Alive;
                 }
             }
         }
