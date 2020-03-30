@@ -56,9 +56,7 @@ void Conway::Engine::ChangeClickedCell(std::pair<int, int> Coords, Cell State)
     rect.w = m_CellSize.first;
     rect.h = m_CellSize.second;
 
-    int ClickedCell = Coords.first / m_CellSize.first +
-        GRID_WIDTH * Coords.second / m_CellSize.second;
-
+    int ClickedCell = (floor(Coords.first / m_CellSize.first)) + GRID_WIDTH * (floor(Coords.second / m_CellSize.second));
     m_Grid[ClickedCell] = State;
 
     if (State == Cell::Alive)
@@ -76,11 +74,6 @@ void Conway::Engine::ChangeClickedCell(std::pair<int, int> Coords, Cell State)
     DrawLines();
 }
 
-void Conway::Engine::DrawCells()
-{
-
-}
-
 void Conway::Engine::HandleEvents()
 {
     SDL_Event event;
@@ -95,17 +88,22 @@ void Conway::Engine::HandleEvents()
                 // Toggles the updating with a keypress
             case SDL_KEYDOWN:
                 m_Update = m_Update ? false : true;
+                DrawLines();
                 break;
 
             case SDL_MOUSEBUTTONDOWN:
-                if (event.button.button == SDL_BUTTON_LEFT)
+                if (!m_Update)
                 {
-                    ChangeClickedCell({event.button.x, event.button.y}, Cell::Alive);
+                    if (event.button.button == SDL_BUTTON_LEFT)
+                    {
+                        ChangeClickedCell({event.button.x, event.button.y}, Cell::Alive);
+                    }
+                    else if (event.button.button == SDL_BUTTON_RIGHT)
+                    {
+                        ChangeClickedCell({event.button.x, event.button.y}, Cell::Dead);
+                    }
                 }
-                else if (event.button.button == SDL_BUTTON_RIGHT)
-                {
-                    ChangeClickedCell({event.button.x, event.button.y}, Cell::Dead);
-                }
+                break;
         }
     }
 }
@@ -115,7 +113,29 @@ void Conway::Engine::Draw()
 {
     SDL_RenderClear(m_Renderer);
 
-    DrawLines();
+    for (int i = 0; i < GRID_HEIGHT; ++i)
+    {
+        for (int j = 0; j < GRID_WIDTH; ++j)
+        {
+            if (m_Grid[j + GRID_WIDTH * i] == Cell::Alive)
+            {
+                SDL_SetRenderDrawColor(m_Renderer, 255, 255, 255, 255);
+            }
+            else 
+            {
+                SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 255);
+            }
+
+            SDL_Rect rect;
+            rect.x = m_CellSize.first * j;
+            rect.y = m_CellSize.second * i;
+            rect.w = m_CellSize.first;
+            rect.h = m_CellSize.second;
+
+            SDL_RenderFillRect(m_Renderer, &rect);
+            }
+    }
+
     SDL_RenderPresent(m_Renderer);
 }
 
@@ -175,5 +195,5 @@ void Conway::Engine::Run()
 // Game logic
 void Conway::Engine::Update()
 {
-    
+    std::vector<Cell> temp = { };    
 }
