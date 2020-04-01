@@ -3,8 +3,7 @@
 #include <cmath>
 
 Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
-    : m_ScreenWidth{ScreenWidth}, m_ScreenHeight{ScreenHeight},
-      m_CellSize{ScreenWidth / GRID_WIDTH, ScreenHeight / GRID_HEIGHT} 
+    : m_ScreenWidth{ScreenWidth}, m_ScreenHeight{ScreenHeight}
 {
     SDL_assert(SDL_Init(SDL_INIT_VIDEO) >= 0);
 
@@ -22,14 +21,6 @@ Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
     m_Renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
     SDL_assert(m_Renderer != NULL);
 
-    // In its own scope for minimum memory usage
-    // Initializes the member grid
-    {
-        int gridsize = GRID_WIDTH * GRID_HEIGHT;
-        std::vector<Cell> grid(gridsize, Cell::Dead);
-        m_Grid = grid;
-    }
-
     // Show lines
     SDL_RenderClear(m_Renderer);
     DrawLines();
@@ -43,32 +34,6 @@ Conway::Engine::~Engine()
     m_Renderer = NULL;
 
     SDL_Quit();
-}
-
-int Conway::Engine::CountAliveNeighbors(std::pair<int, int> GridCell)
-{
-    int count = 0;
-    for (int i = -1; i < 2; ++i)
-    {
-        for (int j = -1; j <2; ++j)
-        {
-            int absoluteX = GridCell.first + i;
-            int absoluteY = GridCell.second + j;
-            if (absoluteX == -1 || absoluteX == GRID_WIDTH ||
-                absoluteY == -1 || absoluteY == GRID_HEIGHT ||
-               (i == 0 && j == 0))
-            {
-                continue;
-            }
-
-            if (m_Grid[absoluteX + GRID_WIDTH * absoluteY] == Cell::Alive)
-            {
-                ++count;
-            }
-        }
-    }
-    
-    return count;
 }
 
 // Excactly what it does. Changes the cell that was clicked on

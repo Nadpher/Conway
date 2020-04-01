@@ -1,6 +1,6 @@
-#include <vector>
 #include <SDL2/SDL.h>
-#include <utility>
+
+#include "Board.h"
 
 // Namespace Conway to
 // always enclose classes in a namespace.
@@ -30,20 +30,9 @@ namespace Conway
             void Update();
 
             void DrawLines();
-            int CountAliveNeighbors(std::pair<int, int> GridCell);
 
-            enum class Cell
-            {
-                Dead,
-                Alive
-            };
-            
-            void ChangeClickedCell(std::pair<int, int> Coords, Cell State);
-
-            std::vector<Cell> m_Grid;
             const int m_ScreenWidth;
             const int m_ScreenHeight;
-            const std::pair<int, int> m_CellSize;
 
             bool m_Update = false;
             bool m_Running = true;
