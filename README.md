@@ -2,8 +2,13 @@
 Conway's game of life in C++.
 Using SDL2.
 
-# Install instructions
-To install, do:
+# Required packages
+For building, the following packages are required:
+- SDL2
+- Cmake 17.0 or higher
+
+# Build instructions
+To build, do:
 ```
 git clone https://github.com/Nadpher/Conway
 cd Conway
