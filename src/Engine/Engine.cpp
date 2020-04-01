@@ -14,9 +14,9 @@ Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
             SDL_WINDOW_SHOWN 
             );
 
-    if (!m_Board->
+    if (!m_Board)
     {
-        m_Board->= std::make_unique<Board>(m_ScreenWidth, m_ScreenHeight);
+        m_Board = std::make_unique<Board>(m_ScreenWidth, m_ScreenHeight);
     }
 
     SDL_assert(m_Window != NULL);

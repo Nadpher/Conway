@@ -27,7 +27,6 @@ namespace Conway
 
             void HandleEvents();
             void Draw();
-            void Update();
 
             void DrawLines();
 

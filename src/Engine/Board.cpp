@@ -8,7 +8,7 @@ Conway::Board::Board(Coord<int, int> ScreenSize)
 
 }
 
-int Conway::Board::CountAliveNeighbors(std::pair<int, int> GridCell)
+int Conway::Board::CountAliveNeighbors(Coord<int, int> GridCell)
 {
     int count = 0;
     for (int i = -1; i < 2; ++i)
@@ -35,7 +35,7 @@ int Conway::Board::CountAliveNeighbors(std::pair<int, int> GridCell)
 }
 
 // Inverses the cell that was clicked on
-void Conway::Board::ToggleClickedCell(std::pair<int, int> Coords)
+void Conway::Board::ToggleClickedCell(Coord<int, int> Coords)
 {
     int ClickedCell = (floor(Coords.first / m_CellSize.first)) + GRID_WIDTH * (floor(Coords.second / m_CellSize.second));
     m_Grid[ClickedCell] = m_Grid[ClickedCell] == Cell::Dead ? Cell::Alive : Cell::Dead;
