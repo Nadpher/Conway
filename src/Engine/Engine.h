@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <memory>
 
 #include "Board.h"
 
@@ -36,7 +37,7 @@ namespace Conway
             bool m_Update = false;
             bool m_Running = true;
 
-            Board m_Board;
+            std::unique_ptr<Board> m_Board;
 
             SDL_Window* m_Window;
             SDL_Renderer* m_Renderer;

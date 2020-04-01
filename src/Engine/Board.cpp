@@ -1,4 +1,12 @@
-#include "Engine.h"
+#include "Board.h"
+
+#include <cmath>
+
+Conway::Board::Board(Coord<int, int> ScreenSize)
+    : m_CellSize{ScreenSize.first / GRID_WIDTH, ScreenSize.second / GRID_HEIGHT}
+{
+
+}
 
 int Conway::Board::CountAliveNeighbors(std::pair<int, int> GridCell)
 {
@@ -9,14 +17,14 @@ int Conway::Board::CountAliveNeighbors(std::pair<int, int> GridCell)
         {
             int absoluteX = GridCell.first + i;
             int absoluteY = GridCell.second + j;
-            if (absoluteX == -1 || absoluteX == Engine::GRID_WIDTH ||
-                absoluteY == -1 || absoluteY == Engine::GRID_HEIGHT ||
+            if (absoluteX == -1 || absoluteX == GRID_WIDTH ||
+                absoluteY == -1 || absoluteY == GRID_HEIGHT ||
                (i == 0 && j == 0))
             {
                 continue;
             }
 
-            if (m_Grid[absoluteX + Engine::GRID_WIDTH * absoluteY] == Cell::Alive)
+            if (m_Grid[absoluteX + GRID_WIDTH * absoluteY] == Cell::Alive)
             {
                 ++count;
             }
@@ -27,29 +35,36 @@ int Conway::Board::CountAliveNeighbors(std::pair<int, int> GridCell)
 }
 
 // Inverses the cell that was clicked on
-int Conway::Board::ToggleClickedCell(std::pair<int, int> Coords)
+void Conway::Board::ToggleClickedCell(std::pair<int, int> Coords)
 {
-    SDL_Rect rect;
-    
-    rect.x = floor(Coords.first/m_CellSize.first)*m_CellSize.first;
-    rect.y = floor(Coords.second/m_CellSize.second)*m_CellSize.second;
-    rect.w = m_CellSize.first;
-    rect.h = m_CellSize.second;
-
-    int ClickedCell = (floor(Coords.first / m_CellSize.first)) + Engine::GRID_WIDTH * (floor(Coords.second / m_CellSize.second));
+    int ClickedCell = (floor(Coords.first / m_CellSize.first)) + GRID_WIDTH * (floor(Coords.second / m_CellSize.second));
     m_Grid[ClickedCell] = m_Grid[ClickedCell] == Cell::Dead ? Cell::Alive : Cell::Dead;
+}
 
-    if (State == Cell::Alive)
+void Conway::Board::Update()
+{
+    std::vector<Cell> temp(m_Grid);
+
+    for (int i = 0; i < Board::GRID_HEIGHT; ++i)
     {
-        SDL_SetRenderDrawColor(m_Renderer, 255, 255, 255, 255);
-        SDL_RenderFillRect(m_Renderer, &rect);
-        SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 255);
-    }
-    else
-    {
-        SDL_RenderFillRect(m_Renderer, &rect);
+        for (int j = 0; j < GRID_WIDTH; ++j)
+        {
+            if (m_Grid[j + GRID_WIDTH * i] == Cell::Alive)
+            {
+                if (CountAliveNeighbors({j, i}) < 2 || CountAliveNeighbors({j, i}) > 3)
+                {
+                    temp[j + GRID_WIDTH * i] = Cell::Dead;
+                }
+            }
+            else
+            {
+                if (CountAliveNeighbors({j, i}) == 3)
+                {
+                    temp[j + GRID_WIDTH * i] = Cell::Alive;
+                }
+            }
+        }
     }
 
-    SDL_RenderPresent(m_Renderer);
-    DrawLines();
+    m_Grid = temp;
 }
