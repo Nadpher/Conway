@@ -59,6 +59,10 @@ void Conway::Engine::HandleEvents()
                     m_Update = m_Update ? false : true;
                     DrawLines();
                 }
+                else if (Event.key.keysym.sym == SDLK_c)
+                {
+                    m_Board->Clear();
+                }
                 break;
 
             case SDL_MOUSEBUTTONDOWN:

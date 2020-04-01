@@ -10,6 +10,11 @@ Conway::Board::Board(Coord<int, int> ScreenSize)
     m_Grid = temp;
 }
 
+void Conway::Board::Clear()
+{
+    std::fill(m_Grid.begin(), m_Grid.end(), Cell::Dead);
+}
+
 int Conway::Board::CountAliveNeighbors(Coord<int, int> GridCell)
 {
     int count = 0;

@@ -17,6 +17,7 @@ namespace Conway
             Coord<int, int> GetCellSize() { return m_CellSize; }
             void ToggleClickedCell(Coord<int, int> MouseCoords);
             void Update();
+            void Clear();
 
             enum class Cell
             {
