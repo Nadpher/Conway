@@ -14,12 +14,14 @@ Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
             SDL_WINDOW_SHOWN 
             );
 
+    SDL_assert(m_Window != NULL);
+
     if (!m_Board)
     {
-        m_Board = std::make_unique<Board>(m_ScreenWidth, m_ScreenHeight);
+        Coord<int, int> ScreenSize = {m_ScreenWidth, m_ScreenHeight};
+        m_Board = std::make_unique<Board>(ScreenSize);
     }
-
-    SDL_assert(m_Window != NULL);
+    SDL_assert(m_Board != nullptr);
 
     m_Renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
     SDL_assert(m_Renderer != NULL);
@@ -78,11 +80,11 @@ void Conway::Engine::Draw()
 {
     SDL_RenderClear(m_Renderer);
 
-    for (int i = 0; i < Board::Board::GRID_HEIGHT; ++i)
+    for (int i = 0; i < Board::GRID_HEIGHT; ++i)
     {
         for (int j = 0; j < Board::GRID_WIDTH; ++j)
         {
-            if (m_Board->ReadCell(j + Board::GRID_WIDTH * i) == Cell::Alive)
+            if (m_Board->ReadCell(j + Board::GRID_WIDTH * i) == Board::Cell::Alive)
             {
                 SDL_SetRenderDrawColor(m_Renderer, 255, 255, 255, 255);
             }

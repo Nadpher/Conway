@@ -5,7 +5,9 @@
 Conway::Board::Board(Coord<int, int> ScreenSize)
     : m_CellSize{ScreenSize.first / GRID_WIDTH, ScreenSize.second / GRID_HEIGHT}
 {
-
+    int GridSize = GRID_WIDTH * GRID_HEIGHT;
+    std::vector<Cell> temp(GridSize, Cell::Dead);
+    m_Grid = temp;
 }
 
 int Conway::Board::CountAliveNeighbors(Coord<int, int> GridCell)

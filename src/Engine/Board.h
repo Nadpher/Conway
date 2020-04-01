@@ -18,17 +18,20 @@ namespace Conway
             void ToggleClickedCell(Coord<int, int> MouseCoords);
             void Update();
 
-        private:
-
             enum class Cell
             {
                 Dead,
                 Alive
             };
 
+        private:
+
             int CountAliveNeighbors(Coord<int, int> GridCell);
 
             std::vector<Cell> m_Grid;
             const Coord<int, int> m_CellSize;
+
+        public:
+            Cell ReadCell(int Index) { return m_Grid[Index]; }
     };
 }
