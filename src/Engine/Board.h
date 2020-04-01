@@ -1,11 +1,19 @@
-#include <utility>
+#pragma once
+
 #include <vector>
+
+#include "Coord.h"
 
 namespace Conway
 {
     class Board
     {
         public:
+            
+            static constexpr int GRID_WIDTH = 80;
+            static constexpr int GRID_HEIGHT = 60;
+
+            Coord<int, int> GetCellSize() { return m_CellSize; }
 
         private:
 
@@ -15,10 +23,10 @@ namespace Conway
                 Alive
             };
 
-            int CountAliveNeighbors(std::pair<int, int> GridCell);
-            void ToggleClickedCell(std::pair<int, int> MouseCoords);
+            int CountAliveNeighbors(Coord<int, int> GridCell);
+            void ToggleClickedCell(Coord<int, int> MouseCoords);
 
             std::vector<Cell> m_Grid;
-            const std::pair<int, int> m_CellSize;
+            const Coord<int, int> m_CellSize;
     };
 }

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SDL2/SDL.h>
 
 #include "Board.h"
@@ -20,9 +22,6 @@ namespace Conway
 
             void Run();
 
-            static constexpr int GRID_WIDTH = 80;
-            static constexpr int GRID_HEIGHT = 60;
-
         private:
 
             void HandleEvents();
@@ -36,6 +35,8 @@ namespace Conway
 
             bool m_Update = false;
             bool m_Running = true;
+
+            Board m_Board;
 
             SDL_Window* m_Window;
             SDL_Renderer* m_Renderer;

@@ -1,4 +1,4 @@
-#include "Board.h"
+#include "Engine.h"
 
 int Conway::Board::CountAliveNeighbors(std::pair<int, int> GridCell)
 {
@@ -9,14 +9,14 @@ int Conway::Board::CountAliveNeighbors(std::pair<int, int> GridCell)
         {
             int absoluteX = GridCell.first + i;
             int absoluteY = GridCell.second + j;
-            if (absoluteX == -1 || absoluteX == GRID_WIDTH ||
-                absoluteY == -1 || absoluteY == GRID_HEIGHT ||
+            if (absoluteX == -1 || absoluteX == Engine::GRID_WIDTH ||
+                absoluteY == -1 || absoluteY == Engine::GRID_HEIGHT ||
                (i == 0 && j == 0))
             {
                 continue;
             }
 
-            if (m_Grid[absoluteX + GRID_WIDTH * absoluteY] == Cell::Alive)
+            if (m_Grid[absoluteX + Engine::GRID_WIDTH * absoluteY] == Cell::Alive)
             {
                 ++count;
             }
@@ -26,7 +26,8 @@ int Conway::Board::CountAliveNeighbors(std::pair<int, int> GridCell)
     return count;
 }
 
-void Conway::Board::ToggleClickedCell(std::pair<int, int> Coords)
+// Inverses the cell that was clicked on
+int Conway::Board::ToggleClickedCell(std::pair<int, int> Coords)
 {
     SDL_Rect rect;
     
@@ -35,8 +36,8 @@ void Conway::Board::ToggleClickedCell(std::pair<int, int> Coords)
     rect.w = m_CellSize.first;
     rect.h = m_CellSize.second;
 
-    int ClickedCell = (floor(Coords.first / m_CellSize.first)) + GRID_WIDTH * (floor(Coords.second / m_CellSize.second));
-    m_Grid[ClickedCell] = State;
+    int ClickedCell = (floor(Coords.first / m_CellSize.first)) + Engine::GRID_WIDTH * (floor(Coords.second / m_CellSize.second));
+    m_Grid[ClickedCell] = m_Grid[ClickedCell] == Cell::Dead ? Cell::Alive : Cell::Dead;
 
     if (State == Cell::Alive)
     {
