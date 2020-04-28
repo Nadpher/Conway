@@ -10,11 +10,9 @@
 namespace Conway
 {
     // The engine class handles
-    // everything about the program:
+    // displays the logic of the program and interacts with the user:
     // It handles the window, the renderer,
-    // Drawing, Events, Game logic,
-    // and holds representations of the game's
-    // parts (Cell, Grid)
+    // Drawing, Events, and holds representations of the game's parts (Cell, Grid)
     class Engine
     {
         public:
@@ -35,8 +33,8 @@ namespace Conway
 
             bool m_Update = false;
             bool m_Running = true;
-
-            std::unique_ptr<Board> m_Board;
+            
+            Board m_Board;
 
             SDL_Window* m_Window;
             SDL_Renderer* m_Renderer;

@@ -1,7 +1,8 @@
 #include "Engine.h"
 
 Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
-    : m_ScreenWidth{ScreenWidth}, m_ScreenHeight{ScreenHeight}
+    : m_ScreenWidth{ScreenWidth}, m_ScreenHeight{ScreenHeight},
+      m_Board({ScreenWidth, ScreenHeight})
 {
     SDL_assert(SDL_Init(SDL_INIT_VIDEO) >= 0);
 
@@ -14,21 +15,16 @@ Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
             SDL_WINDOW_SHOWN 
             );
 
-    SDL_assert(m_Window != NULL);
-
-    if (!m_Board)
+    if (m_Window == nullptr)
     {
-        Coord<int, int> ScreenSize = {m_ScreenWidth, m_ScreenHeight};
-        m_Board = std::make_unique<Board>(ScreenSize);
+        throw std::runtime_error("Failed to create SDL Window!\n");
     }
-    SDL_assert(m_Board != nullptr);
 
     m_Renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
-    SDL_assert(m_Renderer != NULL);
-
-    // Show lines
-    SDL_RenderClear(m_Renderer);
-    DrawLines();
+    if (m_Renderer == nullptr)
+    {
+        throw std::runtime_error("Failed to create SDL Renderer!\n");
+    }
 }
 
 Conway::Engine::~Engine()
@@ -61,7 +57,7 @@ void Conway::Engine::HandleEvents()
                 }
                 else if (Event.key.keysym.sym == SDLK_c)
                 {
-                    m_Board->Clear();
+                    m_Board.Clear();
                 }
                 break;
 
@@ -70,7 +66,7 @@ void Conway::Engine::HandleEvents()
                 {
                     if (Event.button.button == SDL_BUTTON_LEFT)
                     {
-                        m_Board->ToggleClickedCell({Event.button.x, Event.button.y});
+                        m_Board.ToggleClickedCell({Event.button.x, Event.button.y});
                     }
                 }
                 break;
@@ -88,7 +84,7 @@ void Conway::Engine::Draw()
     {
         for (int j = 0; j < Board::GRID_WIDTH; ++j)
         {
-            if (m_Board->ReadCell(j + Board::GRID_WIDTH * i) == Board::Cell::Alive)
+            if (m_Board.ReadCell(i, j) == Board::Cell::Alive)
             {
                 SDL_SetRenderDrawColor(m_Renderer, 255, 255, 255, 255);
             }
@@ -98,10 +94,10 @@ void Conway::Engine::Draw()
             }
 
             SDL_Rect rect;
-            rect.x = m_Board->GetCellSize().first * j;
-            rect.y = m_Board->GetCellSize().second * i;
-            rect.w = m_Board->GetCellSize().first;
-            rect.h = m_Board->GetCellSize().second;
+            rect.x = m_Board.GetCellSize().first * j;
+            rect.y = m_Board.GetCellSize().second * i;
+            rect.w = m_Board.GetCellSize().first;
+            rect.h = m_Board.GetCellSize().second;
 
             SDL_RenderFillRect(m_Renderer, &rect);
             }
@@ -128,9 +124,9 @@ void Conway::Engine::DrawLines()
             SDL_RenderDrawLine(
                     m_Renderer,
                     0,
-                    m_Board->GetCellSize().second * i,
-                    m_Board->GetCellSize().first * Board::GRID_WIDTH,
-                    m_Board->GetCellSize().second * i
+                    m_Board.GetCellSize().second * i,
+                    m_Board.GetCellSize().first * Board::GRID_WIDTH,
+                    m_Board.GetCellSize().second * i
                     );
         }
     }
@@ -141,10 +137,10 @@ void Conway::Engine::DrawLines()
         {
             SDL_RenderDrawLine(
                     m_Renderer,
-                    m_Board->GetCellSize().first * i,
+                    m_Board.GetCellSize().first * i,
                     0,
-                    m_Board->GetCellSize().first * i,
-                    m_Board->GetCellSize().second * Board::GRID_HEIGHT
+                    m_Board.GetCellSize().first * i,
+                    m_Board.GetCellSize().second * Board::GRID_HEIGHT
                     );
         }
     }
@@ -161,10 +157,8 @@ void Conway::Engine::Run()
         HandleEvents();
         if (m_Update)
         {
-            m_Board->Update();
+            m_Board.Update();
         }
         Draw();
-
-        SDL_Delay(100);
     }
 }
