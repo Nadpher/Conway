@@ -33,6 +33,6 @@ namespace Conway
             const Coord<int, int> m_CellSize;
 
         public:
-            Cell ReadCell(int Index) { return m_Grid[Index]; }
+            Cell ReadCell(int x, int y) const { return m_Grid[y + x * GRID_WIDTH]; }
     };
 }

@@ -84,7 +84,7 @@ void Conway::Engine::Draw()
     {
         for (int j = 0; j < Board::GRID_WIDTH; ++j)
         {
-            if (m_Board.ReadCell(j + Board::GRID_WIDTH * i) == Board::Cell::Alive)
+            if (m_Board.ReadCell(i, j) == Board::Cell::Alive)
             {
                 SDL_SetRenderDrawColor(m_Renderer, 255, 255, 255, 255);
             }
