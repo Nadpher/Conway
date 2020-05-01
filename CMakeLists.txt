@@ -10,11 +10,13 @@ else()
 endif()
 
 # finds linux distro
-find_program(LSB_RELEASE_EXEC lsb_release)
-execute_process(COMMAND ${LSB_RELEASE_EXEC} -is
-    OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+if (CMAKE_SYSTEM_NAME EQUAL Linux)
+    find_program(LSB_RELEASE_EXEC lsb_release)
+    execute_process(COMMAND ${LSB_RELEASE_EXEC} -is
+        OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+endif()
 
 # sets program sources
 file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp)
@@ -27,7 +29,7 @@ if (SDL2_FOUND)
         target_link_libraries(${PROJECT_NAME} SDL2::SDL2) 
     else()
         include_directories(${SDL2_INCLUDE_DIRS})
-        target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+        target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES}) 
     endif()
 else()
     message(FATAL_ERROR "Package sdl2 not found. Cmake will now exit.")
