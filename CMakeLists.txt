@@ -10,7 +10,7 @@ else()
 endif()
 
 # finds linux distro
-if (CMAKE_SYSTEM_NAME EQUAL Linux)
+if (CMAKE_SYSTEM_NAME MATCHES Linux)
     find_program(LSB_RELEASE_EXEC lsb_release)
     execute_process(COMMAND ${LSB_RELEASE_EXEC} -is
         OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
