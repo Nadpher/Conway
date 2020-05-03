@@ -1,5 +1,7 @@
 #include "Engine.h"
 
+#include <stdexcept>
+
 Conway::Engine::Engine(int ScreenWidth, int ScreenHeight)
     : m_ScreenWidth{ScreenWidth}, m_ScreenHeight{ScreenHeight},
       m_Board({ScreenWidth, ScreenHeight})
@@ -31,8 +33,6 @@ Conway::Engine::~Engine()
 {
     SDL_DestroyWindow(m_Window);
     SDL_DestroyRenderer(m_Renderer);
-    m_Window = NULL;
-    m_Renderer = NULL;
 
     SDL_Quit();
 }
