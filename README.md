@@ -8,7 +8,7 @@ For building, the following packages are required:
 - Cmake 17.0 or higher
 
 # Build instructions
-To build, do:
+To build on linux, do:
 ```
 git clone https://github.com/Nadpher/Conway
 cd Conway
