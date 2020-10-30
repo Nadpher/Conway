@@ -17,4 +17,4 @@ cmake ..
 make
 ```
 
-Or you can just use a precompiled library in the releases section of the repo.
+Or you can just use a precompiled executable in the releases section of the repo.
